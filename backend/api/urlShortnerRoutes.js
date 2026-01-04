@@ -7,17 +7,18 @@ const URL = "http://localhost:3000/url/"
 router.post("/short",async (req,res)=>{
     const {url} = req.body
     try{
-    const result = await urlShortner.create({originalUrl:url});
-    if(!result){
-        res.status(400).json({msg:"Didn't Create the Url"})
-    }
-}catch(error){
+        const result = await urlShortner.create({originalUrl:url});
+        if(!result){
+            res.status(400).json({msg:"Didn't Create the Url"})
+        }
+    }catch(error){
+        
     // res.status(400).json({msg:"Didn't Create the Url"})
-    const result = await urlShortner.findOne({originalUrl:url});
-    if(!result){
-        res.status(400).json({msg:"Didn't Create the Url"})
-    }
-    res.json({shortUrl:URL + result._id})
+        const result = await urlShortner.findOne({originalUrl:url});
+        if(!result){
+            res.status(400).json({msg:"Didn't Create the Url"})
+        }
+        res.json({shortUrl:URL + result._id})
     return
 
 }

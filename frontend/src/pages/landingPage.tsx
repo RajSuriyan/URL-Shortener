@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import api from "../api";
 // Zod URL validation (correct API)
 const formSchema = z.object({
   url: z.url({ message: "Enter a valid URL" }),
@@ -27,10 +27,22 @@ function LandingPage() {
     defaultValues: { url: "" },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("Submitting:", values);
     // api.post("/shorten", values); // cookies auto-sent
+    try{
+    const res = await api.post("http://127.0.0.1:3000/url/short",{
+      url: values.url
+    })
+    console.log(res.status)
+    const curr: string[] = JSON.parse(localStorage.getItem("urls") || "[]");
+    curr.push(res.data.url);
+    localStorage.setItem("urls", JSON.stringify(curr));
+  }catch(error){
+    alert(error);
   }
+  }
+  
 
   return (
     <main className="min-h-screen min-w-full bg-gray-100 flex justify-center">

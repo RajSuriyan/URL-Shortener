@@ -20,7 +20,6 @@ router.post("/",createWorkout)
 router.patch("/:id",updateWorkout)
 
 
-
 router.delete("/:id",deleteWorkout)
 
 
