@@ -23,7 +23,7 @@ function App() {
           </Routes>
          </BrowserRouter>
     <footer className="text-center text-lg mt-auto py-6 text-gray-600">
-        © 2025 Raj Suriyan G
+        © {new Date().getFullYear()} Raj Suriyan G
     </footer>
     </div>
   )
