@@ -37,7 +37,7 @@ function LandingPage() {
     // api.post("/shorten", values); // cookies auto-sent
     setButtonClickedState(false);
     try{
-    const res = await api.post(`${import.meta.env.BASE_URL}/url/short`,{
+    const res = await api.post("https://url-shortener-forkd.vercel.app/url/short",{
       url: values.url
     })
     console.log(res.status)
