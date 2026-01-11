@@ -1,48 +1,17 @@
-require("dotenv").config()
-const express = require('express')
-const fs = require('fs')
-const workouts = require("./api/api")
-const mon = require("mongoose")
-const passport = require("./config/passportConfig")
-const authMiddleware = require("./middleware/authMiddleware");
-const authRoutes = require("./api/route")
-const urlShortnerRoutes = require("./api/urlShortnerRoutes")
-const app = express()
-const cors = require("cors")
-app.use(cors({
-  origin: ["http://localhost:5173","https://url-shortener-three-pi.vercel.app"],
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
-  credentials: true
-}));
+const app = require("./api");
+const connectDB = require("./db/connectDb");
 
-app.use(express.json());
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());             // 1. Parse incoming JSON bodies
+async function startServer() {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+  }
+}
 
-app.use(passport.initialize());      // 2. Start Passport (needed for login route)
-
-app.use("/api/workouts", authMiddleware, workouts); // 3. Protect workouts using JWT
-
-// 4. Your /login route should come AFTER passport.initialize()
-//    but it does NOT need authMiddleware
-app.use("/auth", authRoutes);
-app.use("/url",authMiddleware,urlShortnerRoutes)
-app.get("/",(req , res) => {
-    res.json({"message":"API is working"})
-})
-
-
-mon.connect(process.env.DB_URL).then(
-    ()=>{
-        app.listen(process.env.PORT,() => {
-    console.log("Server Started at 3000")
-        })
-    }
-).catch(
-    (error)=>{console.log(error)}
-)
-
-
-
-
+startServer();
