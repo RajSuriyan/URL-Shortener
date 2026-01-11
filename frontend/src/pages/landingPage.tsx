@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Clipboard, ClipboardCheck } from 'lucide-react';
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,6 +25,7 @@ const formSchema = z.object({
 function LandingPage() {
 
   const [buttonClickState,setButtonClickedState] = useState(true);
+  const [copiedIdx, setCopiedIdx] = useState<Set<number>>(new Set());
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,6 +51,16 @@ function LandingPage() {
       setButtonClickedState(true);
   }
   }
+
+  const onClipBoardClick = (url:string,idx:number) => {
+    setCopiedIdx(prev => {
+      const next = new Set(prev); // ✅ new reference
+      next.add(idx);
+      return next;
+    });
+    navigator.clipboard.writeText(url)
+  }
+  
   
 
   return (
@@ -96,18 +108,24 @@ function LandingPage() {
         {/* Urls Display section */}
       </div>
       <div className={(JSON.parse(localStorage.getItem("urls") || "[]").length === 0 )?"hidden":"flex justify-start w-full flex-col"}>
-        <p className="inline-block font-extrabold text-2xl text-black leading-tight select-none my-4 px-6 lg:px-96">
+        <p className="inline-block font-extrabold text-3xl text-black leading-tight select-none my-4 px-6 lg:px-96">
           Recent Links:
         </p>
 
-        <div className="inline-block text-6xl text-black hover:animate-pulse leading-tight text-center ">
+        <div className="flex flex-col items-center gap-4 text-black">
           {(
             JSON.parse(localStorage.getItem("urls") || "[]")
           ).map((element: string, idx: number) => (
-            <div key={idx}>{element}</div>
+            <div key={idx} className="inline-flex w-fit max-w-full items-center gap-32 p-3 bg-white border border-black rounded-xl">
+              <a className="flex active:scale-95 text-xl hover:underline" href={element} target="_blank">{element}</a>
+                {!copiedIdx.has(idx) ? (
+                  <Clipboard onClick={() => onClipBoardClick(element, idx)} />
+                ) : (
+                  <ClipboardCheck onClick={() => onClipBoardClick(element, idx)} />
+                )}            
+            </div>
           ))}
         </div>
-
       </div>
     </main>
   );
