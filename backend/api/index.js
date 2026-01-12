@@ -11,7 +11,7 @@ const app = express()
 const cors = require("cors")
 const connectDB = require("../db/connectDb")
 app.use(cors({
-  origin: ["http://localhost:5173","https://url-shortener-three-pi.vercel.app"],
+  origin: ["*"],
   methods: ["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders: ["Content-Type","Authorization"],
   credentials: true

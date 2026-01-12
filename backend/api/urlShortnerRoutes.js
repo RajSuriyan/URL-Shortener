@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router();
 const urlShortner = require("../models/urlShortner")
 
-const URL = "http://localhost:3000/url/"
+const URL = "https://url-shortener-forkd.vercel.app/url/";
 
 router.post("/short",async (req,res)=>{
     const {url} = req.body
