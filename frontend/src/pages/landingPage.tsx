@@ -40,9 +40,8 @@ function LandingPage() {
     const res = await api.post("https://url-shortener-forkd.vercel.app/url/short",{
       url: values.url
     })
-    console.log(res.status)
     const curr: string[] = JSON.parse(localStorage.getItem("urls") || "[]");
-    curr.push(res.data.url);
+    curr.push(res.data.shortUrl);
     localStorage.setItem("urls", JSON.stringify(curr));
 
   }catch(error){

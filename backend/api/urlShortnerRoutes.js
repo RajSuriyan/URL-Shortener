@@ -33,5 +33,8 @@ router.get("/:id",async (req,res) => {
     }
     res.status(307).redirect(result.originalUrl)
 })
+router.get("/",async (req,res) => {
+    res.json({msg:"URL Shortner API is working"})
+})
 
 module.exports = router;
