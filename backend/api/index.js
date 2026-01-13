@@ -11,7 +11,7 @@ const app = express()
 const cors = require("cors")
 const connectDB = require("../db/connectDb")
 app.use(cors({
-  origin: ["*"],
+  origin: ["http://localhost:5173","https://url-shortener-three-pi.vercel.app"],
   methods: ["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders: ["Content-Type","Authorization"],
   credentials: true
@@ -35,7 +35,7 @@ app.use("/api/workouts", authMiddleware, workouts); // 3. Protect workouts using
 // 4. Your /login route should come AFTER passport.initialize()
 //    but it does NOT need authMiddleware
 app.use("/auth", authRoutes);
-app.use("/url",authMiddleware,urlShortnerRoutes)
+app.use("/url",urlShortnerRoutes)
 app.get("/",(req , res) => {
     res.json({"message":"API is working"})
 })
