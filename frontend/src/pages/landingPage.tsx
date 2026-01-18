@@ -41,7 +41,7 @@ function LandingPage() {
     setButtonClickedState(false);
     try {
       const res = await api.post(
-        "https://url-shortener-forkd.vercel.app/url/short",
+        "/url/short",
         { url: values.url }
       );
 
@@ -75,7 +75,7 @@ function LandingPage() {
 
     const newUrls = urls.filter((_, i) => i !== idx);
 
-    setUrls(newUrls);                       // ✅ React state update
+    setUrls(newUrls);                      
     localStorage.setItem("urls", JSON.stringify(newUrls));
   };
   const sliceElement = (url: string, maxChars = 60) => {
