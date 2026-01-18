@@ -41,7 +41,7 @@ function LandingPage() {
     setButtonClickedState(false);
     try {
       const res = await api.post(
-        "/url/short",
+        "/url/short/",
         { url: values.url }
       );
 
