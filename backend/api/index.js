@@ -10,6 +10,9 @@ const urlShortnerRoutes = require("./urlShortnerRoutes")
 const app = express()
 const cors = require("cors")
 const connectDB = require("../db/connectDb")
+const {upstashRateLimit} = require("../middleware/redisMiddleware")
+
+app.use(upstashRateLimit)
 app.use(cors({
   origin: ["http://localhost:5173","https://url-shortener-three-pi.vercel.app"],
   methods: ["GET","POST","PUT","DELETE","OPTIONS"],

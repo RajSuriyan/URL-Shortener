@@ -1,40 +1,55 @@
 const express = require("express")
 const router = express.Router();
 const urlShortner = require("../models/urlShortner")
+const {redis} = require("../middleware/redisMiddleware")
 
 const URL = "https://url-shortener-forkd.vercel.app/url/";
 
-router.post("/short",async (req,res)=>{
-    const {url} = req.body
-    try{
-        const result = await urlShortner.create({originalUrl:url});
-        if(!result){
-            res.status(400).json({msg:"Didn't Create the Url"})
-        }
-    }catch(error){
-        
-    // res.status(400).json({msg:"Didn't Create the Url"})
-        const result = await urlShortner.findOne({originalUrl:url});
-        if(!result){
-            res.status(400).json({msg:"Didn't Create the Url"})
-        }
-        res.json({shortUrl:URL + result._id})
-    return
+router.post("/short", async (req, res) => {
+  const { url } = req.body;
 
-}
-    res.json({shortUrl:URL + result._id})
-})
+  try {
+    let result = await urlShortner.create({ originalUrl: url });
 
-router.get("/:id",async (req,res) => {
-    const id = req.params.id;
-    const result = await urlShortner.findById(id)
-    if(!result){
-        res.status(400).json({msg:"Didn't Create the Url"})
+    await redis.set(result._id.toString(), url, { ex: 500 });
+
+    return res.json({ shortUrl: URL + result._id });
+
+  } catch (error) {
+    console.log("Create failed, checking existing URL...");
+
+    const result = await urlShortner.findOne({ originalUrl: url });
+
+    if (!result) {
+      return res.status(400).json({ msg: "Couldn't create or find URL" });
     }
-    res.status(307).redirect(result.originalUrl)
-})
-router.get("/",async (req,res) => {
-    res.json({msg:"URL Shortner API is working"})
-})
+
+    await redis.set(result._id.toString(), url, { ex: 500 });
+
+    return res.json({ shortUrl: URL + result._id });
+  }
+});
+
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const cachedUrl = await redis.get(id);
+
+  if (cachedUrl) {
+    return res.status(307).redirect(cachedUrl);
+  }
+
+  const result = await urlShortner.findById(id);
+
+  if (!result) {
+    return res.status(404).json({ msg: "Short URL not found" });
+  }
+
+  await redis.set(id, result.originalUrl, { ex: 500 });
+
+  return res.status(307).redirect(result.originalUrl);
+});
+
 
 module.exports = router;
