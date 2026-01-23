@@ -1,6 +1,6 @@
 const express = require('express')
 
-const app = require("./api");
+const app = require("./api/index");
 const connectDB = require("./db/connectDb");
 
 const PORT = process.env.PORT || 3000;
@@ -16,4 +16,4 @@ async function startServer() {
   }
 }
 
-startServer();
+ startServer();

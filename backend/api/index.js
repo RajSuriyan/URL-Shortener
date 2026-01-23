@@ -13,12 +13,17 @@ const connectDB = require("../db/connectDb")
 const {upstashRateLimit} = require("../middleware/redisMiddleware")
 
 app.use(upstashRateLimit)
+
 app.use(cors({
-  origin: ["http://localhost:5173","https://url-shortener-three-pi.vercel.app"],
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
+  origin: [
+    "http://localhost:5173",
+    "https://url-shortener-three-pi.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
   credentials: true
 }));
+
 app.use(async (req, res, next) => {
   try {
     await connectDB();   // connect on request
@@ -29,8 +34,6 @@ app.use(async (req, res, next) => {
 });
 app.use(express.json());
 
-app.use(express.json());             // 1. Parse incoming JSON bodies
-
 app.use(passport.initialize());      // 2. Start Passport (needed for login route)
 
 app.use("/api/workouts", authMiddleware, workouts); // 3. Protect workouts using JWT
@@ -39,20 +42,21 @@ app.use("/api/workouts", authMiddleware, workouts); // 3. Protect workouts using
 //    but it does NOT need authMiddleware
 app.use("/auth", authRoutes);
 app.use("/url",urlShortnerRoutes)
-app.get("/",(req , res) => {
+
+app.get("/",authMiddleware,(req , res) => {
     res.json({"message":"API is working"})
 })
 
 
-mon.connect(process.env.DB_URL).then(
-    ()=>{
-        app.listen(process.env.PORT,() => {
-    console.log("Server Started at 3000")
-        })
-    }
-).catch(
-    (error)=>{console.log(error)}
-)
+// mon.connect(process.env.DB_URL).then(
+//     ()=>{
+//         app.listen(process.env.PORT,() => {
+//     console.log("Server Started at 3000")
+//         })
+//     }
+// ).catch(
+//     (error)=>{console.log(error)}
+// )
 
 
 module.exports = app;

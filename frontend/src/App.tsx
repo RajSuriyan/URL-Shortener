@@ -3,6 +3,8 @@ import NavbarMod from "./components/NavbarMod";
 import LandingPage from "./pages/landingPage";
 import Login from "./pages/login";
 import Logout from "./pages/Logout";
+import Signup from './pages/Signup';
+
 import NotFound from "./pages/NotFound";
 function App() {
 
@@ -18,7 +20,7 @@ function App() {
             }/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/logout" element={<Logout/>}/>
-            <Route path="/register" element={<Logout/>}/>
+            <Route path="/signup" element={<Signup/>}/>
             <Route path="*" element={<NotFound/>}/>
           </Routes>
          </BrowserRouter>
