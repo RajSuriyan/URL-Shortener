@@ -11,9 +11,10 @@ const app = express()
 const cors = require("cors")
 const connectDB = require("../db/connectDb")
 const {upstashRateLimit} = require("../middleware/redisMiddleware")
+const cookieParser = require('cookie-parser')
+// app.use(upstashRateLimit)
 
-app.use(upstashRateLimit)
-
+app.use(cookieParser());
 app.use(cors({
   origin: [
     "http://localhost:5173",
