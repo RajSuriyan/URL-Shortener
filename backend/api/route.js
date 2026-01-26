@@ -44,8 +44,9 @@ router.post("/login", (req, res, next) => {
     
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: isProd,                 // true ONLY in prod
+      sameSite: isProd ? "None" : "Lax",
+      path: "/",
     };
 
     res.cookie("accessToken", accessToken, {
