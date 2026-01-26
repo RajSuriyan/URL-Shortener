@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const User = require("../models/User");
 const passport = require("../config/passportConfig");
+const isProd = process.env.NODE_ENV === "production";
 
 // SIGNUP
 router.post("/signup", async (req, res) => {
@@ -80,10 +81,11 @@ router.post("/refresh", async (req, res) => {
 
   const newAccess = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "30m" });
   const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-    };
+    httpOnly: true,
+    secure: isProd,                 // true ONLY in prod
+    sameSite: isProd ? "None" : "Lax",
+    path: "/",
+  };
   res.cookie("accessToken", newAccess, {
     ...cookieOptions,
     maxAge: 15 * 60 * 1000 
