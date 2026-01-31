@@ -6,9 +6,9 @@ const BASE_URL = import.meta.env.VITE_APP_URL as string;
 
 /* -------------------- TYPES -------------------- */
 
-interface RefreshResponse {
-  expires_in: number; // seconds until access token expiry
-}
+// interface RefreshResponse {
+//   expires_in: number; // seconds until access token expiry
+// }
 
 /* -------------------- AXIOS INSTANCES -------------------- */
 
@@ -18,11 +18,11 @@ export const api: AxiosInstance = axios.create({
   timeout: 15000,
 });
 
-const refreshApi: AxiosInstance = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-  timeout: 15000,
-});
+// const refreshApi: AxiosInstance = axios.create({
+//   baseURL: BASE_URL,
+//   withCredentials: true,
+//   timeout: 15000,
+// });
 
 /* -------------------- CSRF INTERCEPTOR -------------------- */
 
