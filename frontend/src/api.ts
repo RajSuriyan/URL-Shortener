@@ -36,47 +36,47 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 /* -------------------- REFRESH LOCK -------------------- */
 
-let isRefreshing = false;
+// let isRefreshing = false;
 
-type QueueItem = {
-  resolve: (value?: unknown) => void;
-  reject: (error: unknown) => void;
-};
+// type QueueItem = {
+//   resolve: (value?: unknown) => void;
+//   reject: (error: unknown) => void;
+// };
 
-let failedQueue: QueueItem[] = [];
+// let failedQueue: QueueItem[] = [];
 
-const processQueue = (error?: unknown) => {
-  failedQueue.forEach(({ resolve, reject }) => {
-    if (error) {
-      reject(error);
-    } else {
-      resolve();
-    }
-  });
-  failedQueue = [];
-};
+// const processQueue = (error?: unknown) => {
+//   failedQueue.forEach(({ resolve, reject }) => {
+//     if (error) {
+//       reject(error);
+//     } else {
+//       resolve();
+//     }
+//   });
+//   failedQueue = [];
+// };
 
-/* -------------------- PROACTIVE REFRESH TIMER -------------------- */
+// /* -------------------- PROACTIVE REFRESH TIMER -------------------- */
 
-let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+// let refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
-const scheduleRefresh = (expiresIn: number) => {
-  if (refreshTimer) clearTimeout(refreshTimer);
+// const scheduleRefresh = (expiresIn: number) => {
+//   if (refreshTimer) clearTimeout(refreshTimer);
 
-  // Refresh 30s before expiry
-  const refreshInMs = Math.max((expiresIn - 30) * 1000, 0);
+//   // Refresh 30s before expiry
+//   const refreshInMs = Math.max((expiresIn - 30) * 1000, 0);
 
-  refreshTimer = setTimeout(async () => {
-    try {
-      const resp = await refreshApi.post<RefreshResponse>("/auth/refresh");
-      scheduleRefresh(resp.data.expires_in);
-    } catch {
-      window.location.href = "/login";
-    }
-  }, refreshInMs);
-};
+//   refreshTimer = setTimeout(async () => {
+//     try {
+//       const resp = await refreshApi.post<RefreshResponse>("/auth/refresh");
+//       scheduleRefresh(resp.data.expires_in);
+//     } catch {
+//       window.location.href = "/login";
+//     }
+//   }, refreshInMs);
+// };
 
-/* -------------------- RESPONSE INTERCEPTOR -------------------- */
+// /* -------------------- RESPONSE INTERCEPTOR -------------------- */
 
 // api.interceptors.response.use(
 //   (response: AxiosResponse) => response,
