@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/useAuth";
 import {
   Button,
   Link,
@@ -9,7 +10,6 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@heroui/react";
-
 export const AcmeLogo = () => {
   return (
     <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
@@ -24,6 +24,7 @@ export const AcmeLogo = () => {
 };
 
 export default function NavbarMod() {
+  const {loggedIn} = useAuth();
   const menuItems = [
     "Home",
     "About",
@@ -70,7 +71,7 @@ export default function NavbarMod() {
             <Link href="/login">Login</Link>
           </NavbarItem>
           <NavbarItem>
-            <Button as={Link} color="warning" href="/signup" variant="flat">
+            <Button className={(loggedIn)?"disabled":""} as={Link} color="warning" href="/signup" variant="flat">
               Sign Up
             </Button>
           </NavbarItem>

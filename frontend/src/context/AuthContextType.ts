@@ -2,8 +2,9 @@ import { createContext } from "react";
 
 export type AuthContextType = {
   loggedIn: boolean;
+  loading:boolean;
   setLoggedIn: (v: boolean) => void;
-  logout: () => void;
+  setLoading:(v:boolean) => void;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);

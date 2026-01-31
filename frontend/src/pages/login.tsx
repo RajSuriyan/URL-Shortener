@@ -16,6 +16,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -24,27 +25,38 @@ import api from "../api";
 
 // ---- Schema ----
 const loginSchema = z.object({
-  email: z.string().email("Enter a valid email"),
+  email: z.email("Enter a valid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const form = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+    const {setLoggedIn,loggedIn} = useAuth();
+    console.log(loggedIn)
+    const form = useForm<LoginForm>({
+      resolver: zodResolver(loginSchema),
+      
+      defaultValues: {
+        email: "",
+        password: "",
+      },
+    });
 
   async function onSubmit(data: LoginForm) {
-
     const res = await api.post("/auth/login",data);
     console.log(res)
-    const resp = await api.get("/");
-    console.log(resp)
+    if(res.status<300){
+      setLoggedIn(true);
+      console.log(loggedIn)
+    }
+    try{
+    const resp = await api.get("/api/workouts");
+    console.log("hjhj",resp)
+    }catch(error){
+    //       const resp = await api.get("/api/workouts");
+    console.log(error)
+    }
     toast("Login submitted", {
       description: (
         <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
@@ -61,7 +73,7 @@ export default function Login() {
         <CardHeader>
           <CardTitle>Sign In</CardTitle>
           <CardDescription>
-            Enter your credentials to continue.
+            Enter your credentials to continue.{loggedIn}
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -17,7 +17,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import api from "../api";
-
 const formSchema = z.object({
   url: z.url({ message: "Enter a valid URL" }),
 });
@@ -26,7 +25,6 @@ function LandingPage() {
   const [buttonClickState, setButtonClickedState] = useState(true);
   const [copiedIdx, setCopiedIdx] = useState<Set<number>>(new Set());
 
-  // ✅ THIS IS THE IMPORTANT CHANGE
   const [urls, setUrls] = useState<string[]>(() => {
     const saved = localStorage.getItem("urls");
     return saved ? JSON.parse(saved) : [];
@@ -47,7 +45,7 @@ function LandingPage() {
 
       const newUrls = [...urls, res.data.shortUrl];
 
-      setUrls(newUrls);                       // ✅ React state update
+      setUrls(newUrls);                       
       localStorage.setItem("urls", JSON.stringify(newUrls));
 
     } catch (error) {
@@ -86,7 +84,8 @@ function LandingPage() {
       return `${start}...${end}`;
     }
   return (
-    <main className="min-h-screen min-w-full bg-gray-100 flex flex-col justify-center items-center">
+    
+    <main className="min-h-96 min-w-full bg-gray-100 flex flex-col justify-center items-center">
       <div className="flex flex-col md:flex-row w-full max-w-6xl gap-6 items-center">
         {/* TEXT SECTION */}
         <div className="flex justify-center md:justify-start w-full">
@@ -155,7 +154,7 @@ function LandingPage() {
           {urls.map((element: string, idx: number) => (
             <div
               key={idx}
-              className="inline-flex w-fit max-w-full items-center gap-32 p-3 bg-white border border-black rounded-xl"
+              className="inline-flex w-fit max-w-full items-center gap-5 lg:gap-32 p-3 bg-white border border-black rounded-xl"
             >
               <a
                 className="block active:scale-95 text-xl hover:underline max-w-xs md:max-w-md truncate"

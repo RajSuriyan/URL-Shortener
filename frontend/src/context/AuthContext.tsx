@@ -1,18 +1,17 @@
 import * as React from "react";
-import { AuthContext, AuthContextType } from "./AuthContext";
+import { AuthContext } from "./AuthContextType";
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
-  const logout = () => setLoggedIn(false);
-
-  const value: AuthContextType = { loggedIn, setLoggedIn, logout };
+  const value = { loggedIn, setLoggedIn, loading, setLoading };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext value={value}>
       {children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 }
 
-export default AuthProvider;
+

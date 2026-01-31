@@ -1,30 +1,39 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NavbarMod from "./components/NavbarMod";
+import AuthProvider from './context/AuthContext';
 import LandingPage from "./pages/landingPage";
 import Login from "./pages/login";
 import Logout from "./pages/Logout";
+import NotFound from "./pages/NotFound";
+import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 
-import NotFound from "./pages/NotFound";
+
 function App() {
 
   return (
     <div className="min-h-screen w-full bg-gray-100">
       <BrowserRouter>
-        <NavbarMod />
-          <Routes>
-            <Route
-            path = "/"
-            element = {
-              <LandingPage />
-            }/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/logout" element={<Logout/>}/>
-            <Route path="/signup" element={<Signup/>}/>
-            <Route path="*" element={<NotFound/>}/>
-          </Routes>
+        <AuthProvider>
+          <NavbarMod />
+            <Routes>
+              <Route
+              path = "/"
+              element = {
+                <LandingPage />
+              }/>
+              <Route path="/login" element={<Login/>}/>
+              <Route path="/logout" element={<Logout/>}/>
+              <Route path="/signup" element={<Signup/>}/>
+              <Route path="/profile" element={<Profile/>}/>
+              <Route path="*" element={<NotFound/>}/>
+
+
+            </Routes>
+        </AuthProvider>
+
          </BrowserRouter>
-    <footer className="text-center text-lg mt-auto py-6 text-gray-600">
+    <footer className="text-center text-lg mt-auto py-20 text-gray-600">
         © {new Date().getFullYear()} Raj Suriyan G
     </footer>
     </div>

@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const User = require("../models/User");
 const passport = require("../config/passportConfig");
 const isProd = process.env.NODE_ENV === "production";
-
+const authMiddleware = require("../middleware/authMiddleware")
 // SIGNUP
 router.post("/signup", async (req, res) => {
   const { email, password } = req.body;
@@ -67,7 +67,7 @@ router.post("/login", (req, res, next) => {
 
 
 // REFRESH TOKEN ROUTE
-router.post("/refresh", async (req, res) => {
+router.post("/refresh",authMiddleware,async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) return res.status(400).json({ error: "No refresh token" });
 
