@@ -3,7 +3,7 @@ import api from "../api";
  function About(){
     const [click,onClicked] = useState(false);
     const onChange = async () =>{
-        const res = await api.get("/")
+         await api.get("/")
         onClicked(true);
        setTimeout(()=>{onClicked(false)},1000);
     
