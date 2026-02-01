@@ -75,7 +75,7 @@ export default function NavbarMod() {
               Sign Up
             </Button>
             {loggedIn && (<Button className={(loggedIn)?"":"hidden"} as={Link} color="warning" href="/logout" variant="flat">
-              {userName.toLocaleUpperCase()}
+              Profile
             </Button>)}
             <Button className={(loggedIn)?"":"hidden"} as={Link} color="warning" href="/logout" variant="flat">
               Logout
