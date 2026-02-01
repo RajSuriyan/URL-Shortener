@@ -24,7 +24,7 @@ export const AcmeLogo = () => {
 };
 
 export default function NavbarMod() {
-  const {loggedIn,userName} = useAuth();
+  const {loggedIn} = useAuth();
   const menuItems = [
     "Home",
     "About",
