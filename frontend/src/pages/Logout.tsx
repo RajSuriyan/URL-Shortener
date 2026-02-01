@@ -1,16 +1,29 @@
-import { useState } from "react";
-
+import api from "@/api";
+import { useAuth } from "@/context/useAuth";
+import { useEffect, useState } from "react";
 function Logout(){
     const [click,onClicked] = useState(false);
-    const onChange = () =>{
+    const {setLoading,setLoggedIn} = useAuth();
+    const onChange = async () =>{
        onClicked(true);
+       try{
+        setLoading(true);
+       await api.get("/auth/logout")
+        setLoggedIn(false);
+       }catch(err){
+        console.log(err);
+       }finally{
+        setLoading(false);
+        setLoggedIn(false);
+
+        window.location.href= "/"
+       }
        setTimeout(()=>{onClicked(false)},1000);
     }
+    useEffect(()=>{onChange()});
 
     return (
-        <h1 onClick={onChange} className={ (click!==true) ? "flex font-extrabold text-9xl justify-center py-2 hover:animate-pulse text-amber-400 bg-black" :"flex font-extrabold text-9xl justify-center py-2 animate-spin text-amber-400 bg-black"}> 
-            Hello World!!
-        </h1>
+        <></>
     )
 }
 

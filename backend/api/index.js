@@ -45,8 +45,11 @@ app.use("/api/workouts", authMiddleware, workouts); // 3. Protect workouts using
 app.use("/auth", authRoutes);
 app.use("/url",urlShortnerRoutes)
 
-app.get("/",authMiddleware,(req , res) => {
+app.get("/",(req , res) => {
     res.json({"message":"API is working"})
+})
+app.get("/me",authMiddleware,(req , res) => {
+    res.json({"sucess":true,userName:req.user.userName})
 })
 
 

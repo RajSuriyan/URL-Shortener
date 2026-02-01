@@ -1,14 +1,13 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NavbarMod from "./components/NavbarMod";
 import AuthProvider from './context/AuthContext';
+import About from "./pages/About";
 import LandingPage from "./pages/landingPage";
 import Login from "./pages/login";
 import Logout from "./pages/Logout";
 import NotFound from "./pages/NotFound";
 import Profile from './pages/Profile';
 import Signup from './pages/Signup';
-
-
 function App() {
 
   return (
@@ -26,6 +25,8 @@ function App() {
               <Route path="/logout" element={<Logout/>}/>
               <Route path="/signup" element={<Signup/>}/>
               <Route path="/profile" element={<Profile/>}/>
+              <Route path="/about" element={<About/>}/>
+
               <Route path="*" element={<NotFound/>}/>
 
 

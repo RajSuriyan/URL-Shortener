@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,7 @@ import api from "../api";
 // ---- Zod Schema ----
 const signupSchema = z
   .object({
-    username: z
+    userName: z
       .string()
       .min(3, "Username must be at least 3 characters")
       .max(20, "Username must be at most 20 characters"),
@@ -47,10 +46,11 @@ const signupSchema = z
 type SignupForm = z.infer<typeof signupSchema>;
 
 export default function Signup() {
+  const router = useRouter();
   const form = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: "",
+      userName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -59,17 +59,15 @@ export default function Signup() {
 
   async function onSubmit(data: SignupForm) {
     const { confirmPassword, ...payload } = data; // remove confirmPassword before sending to backend
-    console.log(payload)
+    try{
     const res = await api.post("/auth/signup",payload,{withCredentials:true})
     console.log(res.data);
-    toast("Signup submitted", {
-      description: (
-        <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-          <code>{JSON.stringify(payload, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-    });
+    form.reset()
+    alert("Signedup sucessfully");
+    window.location.href="/login";
+    }catch(err){
+      alert(err);
+    }
   }
 
   return (
@@ -85,15 +83,15 @@ export default function Signup() {
           <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup className="space-y-4">
               {/* Username */}
-              <Field data-invalid={!!form.formState.errors.username}>
+              <Field data-invalid={!!form.formState.errors.userName}>
                 <FieldLabel>Username</FieldLabel>
                 <Input
-                  {...form.register("username")}
+                  {...form.register("userName")}
                   placeholder="johndoe"
                   autoComplete="off"
                 />
-                {form.formState.errors.username && (
-                  <FieldError errors={[form.formState.errors.username]} />
+                {form.formState.errors.userName && (
+                  <FieldError errors={[form.formState.errors.userName]} />
                 )}
               </Field>
               {/* Email */}

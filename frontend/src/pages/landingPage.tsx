@@ -24,7 +24,6 @@ const formSchema = z.object({
 function LandingPage() {
   const [buttonClickState, setButtonClickedState] = useState(true);
   const [copiedIdx, setCopiedIdx] = useState<Set<number>>(new Set());
-
   const [urls, setUrls] = useState<string[]>(() => {
     const saved = localStorage.getItem("urls");
     return saved ? JSON.parse(saved) : [];
@@ -34,7 +33,6 @@ function LandingPage() {
     resolver: zodResolver(formSchema),
     defaultValues: { url: "" },
   });
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setButtonClickedState(false);
     try {

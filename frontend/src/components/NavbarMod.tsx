@@ -24,7 +24,7 @@ export const AcmeLogo = () => {
 };
 
 export default function NavbarMod() {
-  const {loggedIn} = useAuth();
+  const {loggedIn,userName} = useAuth();
   const menuItems = [
     "Home",
     "About",
@@ -68,11 +68,17 @@ export default function NavbarMod() {
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem className="hidden md:flex">
-            <Link href="/login">Login</Link>
+            <Link href="/login" className={(loggedIn)?"hidden":""} >Login</Link>
           </NavbarItem>
-          <NavbarItem>
-            <Button className={(loggedIn)?"disabled":""} as={Link} color="warning" href="/signup" variant="flat">
+          <NavbarItem className="flex gap-1">
+            <Button className={(loggedIn)?"hidden":""} as={Link} color="warning" href="/signup" variant="flat">
               Sign Up
+            </Button>
+            {loggedIn && (<Button className={(loggedIn)?"":"hidden"} as={Link} color="warning" href="/logout" variant="flat">
+              {userName.toLocaleUpperCase()}
+            </Button>)}
+            <Button className={(loggedIn)?"":"hidden"} as={Link} color="warning" href="/logout" variant="flat">
+              Logout
             </Button>
           </NavbarItem>
         </NavbarContent>

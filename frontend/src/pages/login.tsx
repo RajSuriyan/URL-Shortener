@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import * as z from "zod";
 import api from "../api";
 
@@ -33,7 +32,6 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
     const {setLoggedIn,loggedIn} = useAuth();
-    console.log(loggedIn)
     const form = useForm<LoginForm>({
       resolver: zodResolver(loginSchema),
       
@@ -44,27 +42,13 @@ export default function Login() {
     });
 
   async function onSubmit(data: LoginForm) {
+    try{
     const res = await api.post("/auth/login",data);
-    console.log(res)
     if(res.status<300){
       setLoggedIn(true);
-      console.log(loggedIn)
+    }}catch(err){
+      alert("Either Password or Email is Wrong");
     }
-    try{
-    const resp = await api.get("/api/workouts");
-    console.log("hjhj",resp)
-    }catch(error){
-    //       const resp = await api.get("/api/workouts");
-    console.log(error)
-    }
-    toast("Login submitted", {
-      description: (
-        <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-    });
   }
 
   return (
@@ -78,7 +62,7 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup className="space-y-4">
+            <FieldGroup className="space-y-4 text-2xl">
               {/* Email */}
               <Field data-invalid={!!form.formState.errors.email}>
                 <FieldLabel>Email</FieldLabel>

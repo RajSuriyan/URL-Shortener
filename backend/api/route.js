@@ -9,14 +9,14 @@ const isProd = process.env.NODE_ENV === "production";
 const authMiddleware = require("../middleware/authMiddleware")
 // SIGNUP
 router.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Missing fields" });
+  const {userName, email, password } = req.body;
+  if (!email || !password || !userName) return res.status(400).json({ error: "Missing fields" });
 
   const exists = await User.findOne({ email });
   if (exists) return res.status(400).json({ error: "User already exists" });
 
   const hashed = await bcrypt.hash(password, 12);
-  const user = new User({ email, password: hashed, refreshTokens: [] ,ShortUrls: [] });
+  const user = new User({ email, password: hashed,userName, refreshTokens: [] ,ShortUrls: [] });
   await user.save();
 
   res.json({ message: "Signup successful" });
@@ -32,7 +32,7 @@ router.post("/login", (req, res, next) => {
     }
 
     const accessToken = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email,userName:user.userName },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
@@ -44,9 +44,8 @@ router.post("/login", (req, res, next) => {
     
     const cookieOptions = {
       httpOnly: true,
-      secure: isProd,                 // true ONLY in prod
-      sameSite: isProd ? "None" : "Lax",
-      path: "/",
+      secure: true,        // REQUIRED for SameSite=None
+      sameSite: "None",    // REQUIRED for cross-origin fetch
     };
 
     res.cookie("accessToken", accessToken, {
@@ -59,7 +58,7 @@ router.post("/login", (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    return res.json({ success: true });
+    return res.json({ success: true,userName:user.userName});
 
   })(req, res, next);   // ← correct passport invocation
 });
@@ -95,6 +94,26 @@ router.post("/refresh",authMiddleware,async (req, res) => {
   res.cookie("refreshToken", refreshToken, {
     ...cookieOptions,
     maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+
+  res.json({ success: true });
+});
+
+router.get("/logout",async (req,res)=>{
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProd,                 // true ONLY in prod
+    sameSite: isProd ? "None" : "Lax",
+    path: "/",
+  };
+  res.cookie("accessToken", "", {
+    ...cookieOptions,
+    maxAge: 0
+  });
+
+  res.cookie("refreshToken", "", {
+    ...cookieOptions,
+    maxAge: 0
   });
 
   res.json({ success: true });
