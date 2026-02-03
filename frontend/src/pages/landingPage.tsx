@@ -37,7 +37,7 @@ function LandingPage() {
     setButtonClickedState(false);
     try {
       const res = await api.post(
-        "https://url-shortener-forkd.vercel.app/url/short/",
+        "/url/short/",
         { url: values.url }
       );
 

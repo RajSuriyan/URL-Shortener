@@ -19,9 +19,9 @@ const {optionalAuthMiddleware} = require("../middleware/optionalAuthMiddleware")
 app.use(cookieParser());
 app.use(cors({
   origin: [
+    "https://localhost:5173",
     "http://localhost:5173",
     "https://url-shortener-three-pi.vercel.app",
-    "https://localhost:5173"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],

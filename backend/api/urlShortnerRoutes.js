@@ -16,30 +16,33 @@ router.post("/short",async (req, res) => {
 
       await redis.set(result._id.toString(), url, { ex: 500 });
 
+
+      if(req.user){
+      const userId = req.user.id;
+      const userDoc = await User.findById(userId);
+      if(!userDoc){
+        return res.status(400).json({msg:"Something went wrong"});
+      }
+      userDoc.ShortUrls.append(URL + result._id);
+      try{
+      await userDoc.save()
+      }catch{
+        res.status(400).json({msg:"Url Not Created"})
+      }
       return res.json({ shortUrl: URL + result._id });
+    }
 
     } catch (error) {
       // console.log("Create failed, checking existing URL...");
       const result = await urlShortner.findOne({ originalUrl: url });
+      await redis.set(result._id.toString(), url, { ex: 500 });
+
       if (!result) {
         return res.status(400).json({ msg: "Couldn't create or find URL" });
       }
+
     }
-    await redis.set(result._id.toString(), url, { ex: 500 });
-    if(req.user){
-    const userId = req.user.id;
-    const userDoc = await User.findById(userId);
-    if(!userDoc){
-      return res.status(400).json({msg:"Something went wrong"});
-    }
-    userDoc.ShortUrls.append(URL + result._id);
-    try{
-    await userDoc.save()
-    }catch{
-      res.status(400).json({msg:"Url Not Created"})
-    }
-    return res.json({ shortUrl: URL + result._id });
-  }
+
 });
 
 
