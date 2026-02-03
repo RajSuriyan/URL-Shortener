@@ -2,11 +2,10 @@ const express = require("express")
 const router = express.Router();
 const urlShortner = require("../models/urlShortner")
 const {redis} = require("../middleware/redisMiddleware")
-const {optionalAuthMiddleware} = require("../middleware/optionalAuthMiddleware");
 const URL = "https://url-shortener-forkd.vercel.app/url/";
 const User = require("../models/User");
 
-router.post("/short", optionalAuthMiddleware,async (req, res) => {
+router.post("/short",async (req, res) => {
   const { url } = req.body;
   if(!url){
     return res.status(400).json({msg:"Url Not provided"})
@@ -44,7 +43,7 @@ router.post("/short", optionalAuthMiddleware,async (req, res) => {
 });
 
 
-router.get("/:id",optionalAuthMiddleware, async (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   const cachedUrl = await redis.get(id);

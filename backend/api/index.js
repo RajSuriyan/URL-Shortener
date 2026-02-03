@@ -12,6 +12,8 @@ const cors = require("cors")
 const connectDB = require("../db/connectDb")
 const {upstashRateLimit} = require("../middleware/redisMiddleware")
 const cookieParser = require('cookie-parser')
+const {optionalAuthMiddleware} = require("../middleware/optionalAuthMiddleware");
+
 // app.use(upstashRateLimit)
 
 app.use(cookieParser());
@@ -43,7 +45,7 @@ app.use("/api/workouts", authMiddleware, workouts); // 3. Protect workouts using
 // 4. Your /login route should come AFTER passport.initialize()
 //    but it does NOT need authMiddleware
 app.use("/auth", authRoutes);
-app.use("/url",urlShortnerRoutes)
+app.use("/url",optionalAuthMiddleware,urlShortnerRoutes)
 
 app.get("/",(req , res) => {
     res.json({"message":"API is working"})

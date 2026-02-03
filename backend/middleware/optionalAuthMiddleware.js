@@ -1,9 +1,14 @@
 const jwt = require("jsonwebtoken");
 
 function optionalAuthMiddleware(req, res, next) {
-const token =  req.cookies?.accessToken || req.headers?.authorization?.split(" ")[1];
+  const token =
+    req.cookies?.accessToken ||
+    req.headers?.authorization?.split(" ")[1];
+
+  // 🔑 EARLY RETURN if no token
   if (!token) {
     req.user = null;
+    return next();
   }
 
   try {
@@ -12,10 +17,8 @@ const token =  req.cookies?.accessToken || req.headers?.authorization?.split(" "
   } catch (err) {
     req.user = null;
   }
-    
-  next();
 
+  next();
 }
 
-
-module.exports = optionalAuthMiddleware;
+module.exports = {optionalAuthMiddleware};
