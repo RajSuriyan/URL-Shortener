@@ -1,0 +1,22 @@
+{
+  "name": "url-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx worker.ts",
+    "build": "tsc",
+    "start": "node dist/worker.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.36.1",
+    "dotenv": "^17.2.3",
+    "mongoose": "^9.1.5",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

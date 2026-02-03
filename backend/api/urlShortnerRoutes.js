@@ -6,42 +6,41 @@ const URL = "https://url-shortener-forkd.vercel.app/url/";
 const User = require("../models/User");
 
 router.post("/short",async (req, res) => {
+
   const { url } = req.body;
   if(!url){
     return res.status(400).json({msg:"Url Not provided"})
   }
-  
+
+  let currUrl = null;
+
     try {
-      let result = await urlShortner.create({ originalUrl: url });
+      const result = await urlShortner.create({ originalUrl: url ,count:0});
 
       await redis.set(result._id.toString(), url, { ex: 500 });
 
-
-      if(req.user){
-      const userId = req.user.id;
-      const userDoc = await User.findById(userId);
-      if(!userDoc){
-        return res.status(400).json({msg:"Something went wrong"});
-      }
-      userDoc.ShortUrls.append(URL + result._id);
-      try{
-      await userDoc.save()
-      }catch{
-        res.status(400).json({msg:"Url Not Created"})
-      }
-      return res.json({ shortUrl: URL + result._id });
-    }
+      currUrl = result._id;
 
     } catch (error) {
       // console.log("Create failed, checking existing URL...");
       const result = await urlShortner.findOne({ originalUrl: url });
       await redis.set(result._id.toString(), url, { ex: 500 });
-
+      currUrl = result._id;
       if (!result) {
         return res.status(400).json({ msg: "Couldn't create or find URL" });
       }
-
     }
+
+  if(req.user){
+    const userId = req.user.id;
+    const userDoc = await User.findById(userId);
+    if(!userDoc){
+      return res.status(400).json({msg:"Something went wrong"});
+    }
+    await userDoc.updateOne({ _id: userId, $addToSet: { ShortUrls: currUrl }});
+  }
+    
+  return res.json({ shortUrl: URL + currUrl });
 
 });
 
@@ -62,9 +61,7 @@ router.get("/:id", async (req, res) => {
   }
 
   await redis.set(id, result.originalUrl, { ex: 500 }); //Cache the request
-  if(req.user){
-    await redis.incr(`clicks:${id}`); //Click Counts
-  }
+  // await redis.incr(`clicks:${id}`); //Click Counts
 
   return res.status(307).redirect(result.originalUrl);
 });
