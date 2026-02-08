@@ -10,10 +10,12 @@ export default function AuthProvider({
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [userName,setUserName] = React.useState("");
-
+  const ran = React.useRef(false);
   React.useEffect(() => {
     const checkAuth = async () => {
       try {
+         if (ran.current) return;
+        ran.current = true;
         const res = await api.get("/me"); // auth endpoint
         if (res.status === 200) {
           setLoggedIn(true);

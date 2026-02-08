@@ -7,6 +7,7 @@ const User = require("../models/User");
 const passport = require("../config/passportConfig");
 const isProd = process.env.NODE_ENV === "production";
 const authMiddleware = require("../middleware/authMiddleware")
+const RefreshToken = require("../models/refreshTokens");
 // SIGNUP
 router.post("/signup", async (req, res) => {
   const {userName, email, password } = req.body;
@@ -19,7 +20,7 @@ router.post("/signup", async (req, res) => {
   const user = new User({ email, password: hashed,userName, refreshTokens: [] ,ShortUrls: [] });
   await user.save();
 
-  res.json({ message: "Signup successful" });
+  res.json({ message: "Signup msgful" });
 });
 
 router.post("/login", (req, res, next) => {
@@ -36,11 +37,13 @@ router.post("/login", (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
+    const newRefresh = crypto.randomBytes(40).toString("hex");
 
-    const refreshToken = crypto.randomBytes(40).toString("hex");
-
-    user.refreshTokens.push(refreshToken);
-    await user.save();
+    await RefreshToken.create({
+      userId: user.id,
+      token: newRefresh,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+    });
     
     const cookieOptions = {
       httpOnly: true,
@@ -50,54 +53,19 @@ router.post("/login", (req, res, next) => {
 
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
-      maxAge: 15 * 60 * 1000
+      maxAge:  15 * 60 * 1000
     });
 
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refreshToken", newRefresh, {
       ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    return res.json({ success: true,userName:user.userName});
+    return res.json({ msg: true,userName:user.userName});
 
   })(req, res, next);   // ← correct passport invocation
 });
 
-
-
-// REFRESH TOKEN ROUTE
-router.post("/refresh",authMiddleware,async (req, res) => {
-  const { refreshToken } = req.body;
-  if (!refreshToken) return res.status(400).json({ error: "No refresh token" });
-
-  const user = await User.findOne({ refreshTokens: refreshToken });
-  if (!user) return res.status(403).json({ error: "Invalid refresh token" });
-
-  // Rotate refresh token (optional but recommended)
-  user.refreshTokens = user.refreshTokens.filter(t => t !== refreshToken);
-  const newRefresh = crypto.randomBytes(40).toString("hex");
-  user.refreshTokens.push(newRefresh);
-  await user.save();
-
-  const newAccess = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "30m" });
-  const cookieOptions = {
-    httpOnly: true,
-    secure: isProd,                 // true ONLY in prod
-    sameSite: isProd ? "None" : "Lax",
-    path: "/",
-  };
-  res.cookie("accessToken", newAccess, {
-    ...cookieOptions,
-    maxAge: 15 * 60 * 1000 
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    ...cookieOptions,
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  });
-
-  res.json({ success: true });
-});
 
 router.get("/logout",async (req,res)=>{
   const cookieOptions = {
@@ -116,7 +84,7 @@ router.get("/logout",async (req,res)=>{
     maxAge: 0
   });
 
-  res.json({ success: true });
+  res.json({ msg: true });
 });
 
 module.exports = router;

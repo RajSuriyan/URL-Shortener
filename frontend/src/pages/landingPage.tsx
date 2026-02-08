@@ -98,7 +98,7 @@ function LandingPage() {
         <div className="w-full max-w-sm md:max-w-xs">
           <Form {...form}>
             <form
-              className="flex flex-col space-y-4 bg-white shadow-md rounded-2xl p-7 w-full"
+              className="flex flex-col  space-y-4 bg-white shadow-md rounded-2xl p-5 md:p-7 w-full"
               onSubmit={form.handleSubmit(onSubmit)}
             >
               <FormField
@@ -106,12 +106,12 @@ function LandingPage() {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-2xl font-semibold">
+                    <FormLabel className="text-0.75xl md:text-0.9xl font-semibold">
                       Enter the URL
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className="text-2xl w-full border rounded-xl p-3"
+                        className="text-0.75xl md:text-0.75xl w-full border rounded-xl p-3"
                         placeholder="https://xyz.com"
                         {...field}
                       />
@@ -121,7 +121,7 @@ function LandingPage() {
                 )}
               />
               <Button
-                className="text-2xl w-full"
+                className="text-0.75xl md:text-0.75xl w-full"
                 type="submit"
                 disabled={!buttonClickState}
               >
@@ -144,7 +144,7 @@ function LandingPage() {
             : "flex justify-start w-full flex-col"
         }
       >
-        <p className="inline-block font-extrabold text-3xl text-black leading-tight select-none my-4 px-6 lg:px-96">
+        <p className="inline-block font-extrabold text-2xl md:text-3xl text-black leading-tight select-none my-4 px-6 lg:px-96">
           Recent Links:
         </p>
 
@@ -155,7 +155,7 @@ function LandingPage() {
               className="inline-flex w-fit max-w-full items-center gap-5 lg:gap-32 p-3 bg-white border border-black rounded-xl"
             >
               <a
-                className="block active:scale-95 text-xl hover:underline max-w-xs md:max-w-md truncate"
+                className="block active:scale-95 text-0.75xl md:text-xl hover:underline max-w-xs md:max-w-md truncate"
                 href={element}
                 target="_blank"
               >

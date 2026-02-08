@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import api from "../api";
@@ -40,6 +41,12 @@ export default function Login() {
         password: "",
       },
     });
+
+  useEffect(() => {
+    if (loggedIn) {
+      window.location.href = "/";
+    }
+  }, [loggedIn]);
 
   async function onSubmit(data: LoginForm) {
     try{

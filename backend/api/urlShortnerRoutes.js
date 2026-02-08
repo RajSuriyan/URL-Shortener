@@ -33,11 +33,11 @@ router.post("/short",async (req, res) => {
 
   if(req.user){
     const userId = req.user.id;
-    const userDoc = await User.findById(userId);
-    if(!userDoc){
-      return res.status(400).json({msg:"Something went wrong"});
+    try{
+    await User.findByIdAndUpdate(userId,{ $addToSet: { ShortUrls: currUrl } },{ new: true });
+    }catch(err){
+      return res.status(400).json({msg:"User Id Not Found"})
     }
-    await userDoc.updateOne({ _id: userId, $addToSet: { ShortUrls: currUrl }});
   }
     
   return res.json({ shortUrl: URL + currUrl });
@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
   }
 
   await redis.set(id, result.originalUrl, { ex: 500 }); //Cache the request
-  // await redis.incr(`clicks:${id}`); //Click Counts
+  await redis.incr(`clicks:${id}`); //Click Counts
 
   return res.status(307).redirect(result.originalUrl);
 });

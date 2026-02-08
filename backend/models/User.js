@@ -5,7 +5,6 @@ const userSchema = new Schema({
   email: { type: String, unique: true, required: true, lowercase: true },
   password: { type: String, required: true }, // hashed
   userName:{ type: String, required: true },
-  refreshTokens: [String],
   ShortUrls:[String],
 }, { timestamps: true });
 

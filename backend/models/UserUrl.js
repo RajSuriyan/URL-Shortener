@@ -4,7 +4,10 @@ const { Schema } = mongoose;
 const userUrlSchema = new Schema({
   email: { type: String, unique: true, required: true, lowercase: true },
   password: { type: String, required: true }, // hashed
-  refreshTokens: [String],
+  refreshTokens: {
+      type: [String],
+      default: [],
+    },
   ShortUrls:[String],
 }, { timestamps: true });
 
