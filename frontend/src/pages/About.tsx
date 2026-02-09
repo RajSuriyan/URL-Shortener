@@ -1,20 +1,18 @@
-import { useState } from "react";
-import api from "../api";
  function About(){
-    const [click,onClicked] = useState(false);
-    const onChange = async () =>{
-         await api.get("/")
-        onClicked(true);
-       setTimeout(()=>{onClicked(false)},1000);
-    
-    }
 
     return (
-        <div className="flex justify-center">
-            <h1 onClick={onChange} className={ (click!==true) ? "inline-block font-extrabold text-9xl justify-center px-6 py-2 hover:animate-pulse text-amber-400 bg-black" :" inline-block font-extrabold text-9xl justify-center px-6 py-2 animate-spin text-amber-400 bg-black"}>
-               Not found
-            </h1>
-        </div>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">About</h1>
+      <p className="mb-3">
+        This URL shortener is a personal project built to explore real-world backend and full-stack engineering beyond tutorials and toy examples.
+      </p>
+      <p className="mb-3">
+        The focus is on practical problems such as authentication, background processing, request handling, and basic analytics (like tracking link clicks).
+      </p>
+      <p>
+        This project is actively evolving with new features and improvements added over time.
+      </p>
+    </div>
     )
 }
 

@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NavbarMod from "./components/NavbarMod";
 import AuthProvider from './context/AuthContext';
 import About from "./pages/About";
+import Contact from './pages/Contact';
 import LandingPage from "./pages/landingPage";
 import Login from "./pages/login";
 import Logout from "./pages/Logout";
@@ -26,6 +27,13 @@ function App() {
               <Route path="/signup" element={<Signup/>}/>
               <Route path="/profile" element={<Profile/>}/>
               <Route path="/about" element={<About/>}/>
+              <Route path="/contact" element={<Contact/>}/>
+              <Route
+              path = "/home"
+              element = {
+                <LandingPage />
+              }/>
+
 
               <Route path="*" element={<NotFound/>}/>
 

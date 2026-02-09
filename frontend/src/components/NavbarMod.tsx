@@ -77,9 +77,17 @@ export default function NavbarMod() {
             {loggedIn && (<Button className={(loggedIn)?"":"hidden"} as={Link} color="warning" href="/profile" variant="flat">
               Profile
             </Button>)}
-            <Button className={(loggedIn)?"":"hidden"} as={Link} color="warning" href="/logout" variant="flat">
-              Logout
-            </Button>
+            {loggedIn && (
+              <Button
+                className="hidden md:flex items-center justify-center"
+                as={Link}
+                color="warning"
+                href="/logout"
+                variant="flat"
+              >
+                Logout
+              </Button>
+            )}
           </NavbarItem>
         </NavbarContent>
         <NavbarMenu>
@@ -90,7 +98,7 @@ export default function NavbarMod() {
                 color={
                   index === -1 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
                 }
-                href="#"
+                href={"/" + item}
                 size="lg"
               >
                 {item}
