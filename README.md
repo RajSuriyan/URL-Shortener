@@ -18,7 +18,6 @@ URL-Shortener/
 ├── frontend/        # React frontend client
 ├── backend/         # Express REST API server
 ├── worker/          # Background async worker
-├── package.json
 └── README.md
 ```
 
