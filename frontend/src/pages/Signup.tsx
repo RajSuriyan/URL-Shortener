@@ -1,9 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,6 +16,10 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import api from "../api";
 
 // ---- Zod Schema ----
@@ -46,6 +46,7 @@ const signupSchema = z
 type SignupForm = z.infer<typeof signupSchema>;
 
 export default function Signup() {
+  const [loader,setloader] = useState(false);
   const form = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -57,6 +58,7 @@ export default function Signup() {
   });
 
   async function onSubmit(data: SignupForm) {
+    setloader(true);
     const { confirmPassword, ...payload } = data; // remove confirmPassword before sending to backend
     try{
     const res = await api.post("/auth/signup",payload,{withCredentials:true})
@@ -66,6 +68,8 @@ export default function Signup() {
     window.location.href="/login";
     }catch(err){
       alert(err);
+    }finally{
+      setloader(false);
     }
   }
 
@@ -139,9 +143,9 @@ export default function Signup() {
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             Reset
           </Button>
-          <Button type="submit" form="signup-form">
+        <Button type="submit" form="signup-form" disabled={loader}>
             Sign Up
-          </Button>
+          </Button>          
         </CardFooter>
       </Card>
     </div>
